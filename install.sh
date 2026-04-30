@@ -2,7 +2,7 @@
 set -euo pipefail
 
 APP_NAME="mac-cro"
-REPO_URL="${MAC_CRO_REPO_URL:-https://github.com/shimhyuck/mac-cro.git}"
+REPO_URL="${MAC_CRO_REPO_URL:-https://github.com/hyuck0221/mac-cro.git}"
 APP_DIR="${MAC_CRO_HOME:-$HOME/.mac-cro}"
 BIN_DIR="${MAC_CRO_BIN_DIR:-$HOME/.local/bin}"
 LAUNCHER="$BIN_DIR/$APP_NAME"
@@ -42,10 +42,11 @@ python3 -m venv .venv
 
 cat > "$LAUNCHER" <<EOF
 #!/usr/bin/env bash
-exec "$APP_DIR/.venv/bin/python" "$APP_DIR/macro_recorder.py" "\$@"
+exec "$APP_DIR/launch.sh" "\$@"
 EOF
 
 chmod +x "$LAUNCHER"
+chmod +x "$APP_DIR/launch.sh" "$APP_DIR/run.sh"
 
 case ":$PATH:" in
     *":$BIN_DIR:"*) ;;
