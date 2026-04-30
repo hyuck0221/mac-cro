@@ -28,6 +28,17 @@ mac-cro
 
 mac-cro는 실행할 때마다 GitHub에 새 버전이 있는지 확인합니다. 새 버전이 있으면 앱을 열기 전에 자동으로 업데이트합니다.
 
+사용 가능한 명령어:
+
+```bash
+mac-cro              # 앱 실행
+mac-cro run          # 앱 실행
+mac-cro upgrade      # 최신 버전으로 업데이트
+mac-cro update       # upgrade와 동일
+mac-cro version      # 설치된 버전 확인
+mac-cro help         # 전체 명령어 보기
+```
+
 한 번만 자동 업데이트를 건너뛰려면 아래처럼 실행하세요.
 
 ```bash
@@ -38,7 +49,13 @@ MAC_CRO_AUTO_UPDATE=0 mac-cro
 
 `mac-cro`를 실행할 때 자동으로 업데이트됩니다.
 
-강제로 다시 설치하거나 업데이트하려면 아래 명령어를 실행하세요.
+수동으로 업데이트하려면 아래 명령어를 실행하세요.
+
+```bash
+mac-cro upgrade
+```
+
+`mac-cro` 실행 파일이 깨졌거나 사라진 경우에는 설치 명령어로 다시 설치하세요.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hyuck0221/mac-cro/main/install.sh | bash

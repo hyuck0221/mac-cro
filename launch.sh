@@ -12,6 +12,23 @@ if [ -f "$VERSION_FILE" ]; then
     CURRENT_VERSION="$(tr -d '[:space:]' < "$VERSION_FILE")"
 fi
 
+print_help() {
+    cat <<EOF
+mac-cro $CURRENT_VERSION
+
+Usage:
+  mac-cro                 Open the app
+  mac-cro run             Open the app
+  mac-cro upgrade         Update mac-cro to the latest version
+  mac-cro update          Same as upgrade
+  mac-cro version         Show the installed version
+  mac-cro help            Show this help
+
+Environment:
+  MAC_CRO_AUTO_UPDATE=0   Skip the startup update check
+EOF
+}
+
 ensure_python_env() {
     NEED_INSTALL=0
 
@@ -37,25 +54,29 @@ ensure_python_env() {
     fi
 }
 
-auto_update() {
-    if [ "${MAC_CRO_AUTO_UPDATE:-1}" = "0" ]; then
-        return
-    fi
+update_repo() {
+    MODE="${1:-manual}"
 
     if ! command -v git >/dev/null 2>&1 || [ ! -d "$DIR/.git" ]; then
+        if [ "$MODE" = "manual" ]; then
+            echo "Update is only available for git-based installations."
+        fi
         return
     fi
 
     cd "$DIR"
 
     if ! git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+        if [ "$MODE" = "manual" ]; then
+            echo "No upstream branch is configured."
+        fi
         return
     fi
 
     echo "Checking for mac-cro updates..."
 
     if ! git fetch --quiet; then
-        echo "Update check failed. Starting mac-cro $CURRENT_VERSION."
+        echo "Update check failed."
         return
     fi
 
@@ -79,9 +100,45 @@ auto_update() {
             echo "Updated mac-cro."
         fi
     else
-        echo "Automatic update failed. Starting installed version $CURRENT_VERSION."
+        echo "Update failed. The installed version is still $CURRENT_VERSION."
     fi
 }
+
+auto_update() {
+    if [ "${MAC_CRO_AUTO_UPDATE:-1}" = "0" ]; then
+        return
+    fi
+
+    update_repo auto
+}
+
+COMMAND="${1:-run}"
+
+case "$COMMAND" in
+    help|--help|-h)
+        print_help
+        exit 0
+        ;;
+    version|--version|-v)
+        echo "$CURRENT_VERSION"
+        exit 0
+        ;;
+    upgrade|update)
+        update_repo
+        exit 0
+        ;;
+    run|open|start)
+        shift || true
+        ;;
+    *)
+        if [ "$#" -gt 0 ]; then
+            echo "Unknown command: $COMMAND"
+            echo ""
+            print_help
+            exit 1
+        fi
+        ;;
+esac
 
 auto_update
 ensure_python_env

@@ -28,6 +28,17 @@ mac-cro
 
 mac-cro checks for updates every time it starts. If a newer version is available on GitHub, it updates itself automatically before opening the app.
 
+Available commands:
+
+```bash
+mac-cro              # Open the app
+mac-cro run          # Open the app
+mac-cro upgrade      # Update to the latest version
+mac-cro update       # Same as upgrade
+mac-cro version      # Show the installed version
+mac-cro help         # Show all commands
+```
+
 To skip the update check for one launch:
 
 ```bash
@@ -38,7 +49,13 @@ MAC_CRO_AUTO_UPDATE=0 mac-cro
 
 Updates are automatic when you run `mac-cro`.
 
-You can also force a reinstall/update with:
+You can also update manually with:
+
+```bash
+mac-cro upgrade
+```
+
+If the `mac-cro` launcher is broken or missing, force a reinstall with:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hyuck0221/mac-cro/main/install.sh | bash
